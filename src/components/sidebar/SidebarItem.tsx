@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoChevronDown } from "react-icons/go";
 
 type Props = {
@@ -6,7 +6,8 @@ type Props = {
   icon: React.ReactNode;
   hasDropdown?: boolean;
   dropdownItems?: string[];
-  defaultOpen?: boolean;
+  isOpen?: boolean;
+  onOpen?: () => void;
 };
 
 export const SidebarItem = ({
@@ -14,63 +15,53 @@ export const SidebarItem = ({
   icon,
   hasDropdown = false,
   dropdownItems = [],
-  defaultOpen = false,
+  isOpen = false,
+  onOpen = () => {},
 }: Props) => {
-  const [open, setOpen] = useState(defaultOpen);
-  const [activeOption, setActiveOption] = useState("");
+  const [activeOption, setActiveOption] = useState<string>("");
 
-  const handleClick = () => {
-    if (hasDropdown) {
-      setOpen(!open);
+  useEffect(() => {
+    if (isOpen && hasDropdown && dropdownItems.length > 0) {
+      setActiveOption(dropdownItems[0]);
     }
-  };
-
-  const handleOptionClick = (option: string) => {
-    setActiveOption(option);
-  };
+  }, [dropdownItems, hasDropdown, isOpen]);
 
   return (
-    <div className="w-[280px] flex flex-col rounded-xl transition-all">
+    <div className="w-full flex flex-col rounded-xl transition-all">
       <button
-        onClick={handleClick}
-        className={`h-[60px] flex items-center justify-between px-5 rounded-xl transition-colors duration-200
-          ${open ? "bg-[#243C7B]" : "hover:bg-gray-100"}`}
+        onClick={onOpen}
+        className={`flex justify-between items-center w-full px-5 py-3 rounded-xl transition-colors ${
+          isOpen ? "bg-[#243C7B] text-white" : "hover:bg-gray-50 text-gray-800"
+        }`}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 text-[15px] font-medium">
           <span
-            className={`text-xl ${
-              open ? "text-white" : "text-gray-700"
-            } flex items-center`}
+            className={`${isOpen ? "text-white" : "text-gray-600"} text-xl`}
           >
             {icon}
           </span>
-          <span
-            className={`font-medium tracking-tight ${
-              open ? "text-white" : "text-gray-800"
-            }`}
-          >
-            {title}
-          </span>
+          <span>{title}</span>
         </div>
+
         {hasDropdown && (
           <GoChevronDown
             className={`w-4 h-4 transition-transform ${
-              open ? "rotate-180 text-white" : "text-gray-500"
+              isOpen ? "rotate-180 text-white" : "text-gray-500"
             }`}
           />
         )}
       </button>
 
-      {hasDropdown && open && (
-        <div className="flex flex-col gap-2 pl-10 py-2">
-          {dropdownItems.map((item, index) => (
+      {isOpen && hasDropdown && (
+        <div className="mt-2 flex flex-col gap-3 px-5 py-3 border border-gray-100 rounded-xl bg-white shadow-sm">
+          {dropdownItems.map((item) => (
             <button
-              key={index}
-              onClick={() => handleOptionClick(item)}
-              className={`text-sm text-left px-3 py-2 rounded transition-colors duration-150 ${
+              key={item}
+              onClick={() => setActiveOption(item)}
+              className={`text-sm text-left font-medium transition-colors ${
                 activeOption === item
-                  ? "bg-blue-100 text-blue-700 font-medium"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  ? "text-[#243C7B]"
+                  : "text-gray-600 hover:text-[#243C7B]"
               }`}
             >
               {item}
