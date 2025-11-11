@@ -8,7 +8,7 @@ import Modal from "./components/Modals/CreateModal/CreateModal";
 import { FiPlus } from "react-icons/fi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addPost, deletePost, fetchPosts, updatePost } from "./api/posts";
-import DeleteModal from "./components/Modals/DeleteModal/DeleteModal";
+import DeleteModal from "./components/Modals/DeleteModal";
 
 type FilterChangeType = {
   type: string;

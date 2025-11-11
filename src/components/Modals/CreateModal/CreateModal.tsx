@@ -3,6 +3,7 @@ import CustomEditor from "../CustomRichTextEditor";
 import { Upload, X } from "lucide-react";
 import { Post } from "../../../api/mock";
 import { useForm } from "react-hook-form";
+import { FiX } from "react-icons/fi";
 
 type Language = "AZ" | "EN";
 type Status = "Active" | "Inactive";
@@ -24,7 +25,7 @@ export default function CreateModal({
   isOpen,
   onClose,
   onSave,
-  postToEdit = null,
+  postToEdit,
 }: ModalProps) {
   const [step, setStep] = useState(1);
   const [html, setHtml] = useState("");
@@ -62,7 +63,7 @@ export default function CreateModal({
     }
   }, [postToEdit, setValue, reset]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !showSuccess) return null;
 
   const handleNext = () => {
     if (!title || !html || !slug) {
@@ -122,48 +123,61 @@ export default function CreateModal({
     console.log("payload", payload);
     onSave(payload);
 
-    setTimeout(() => {
-      setShowSuccess(false);
-      onClose();
-      setStep(1);
-      reset();
-      setCoverImage(null);
-      setGalleryImages([]);
-      setHtml("");
-    }, 1500);
+    onClose();
+    setStep(1);
+    reset();
+    setCoverImage(null);
+    setGalleryImages([]);
+    setHtml("");
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
       {showSuccess && (
-        <div className="absolute inset-0 flex items-center justify-center z-60">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 max-w-md">
-            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div
+            className="relative flex flex-col items-center justify-center gap-4 p-8 w-[510px] bg-white rounded-2xl border border-[#E5E7EB] 
+      shadow-[0px_8px_24px_rgba(0,0,0,0.09)] text-center"
+          >
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <FiX className="w-6 h-6" />
+            </button>
+            <div className="flex items-center justify-center w-[96px] h-[96px] rounded-full bg-[#CEFFE1] mt-2 mb-4">
               <svg
-                className="w-10 h-10 text-green-600"
+                viewBox="0 0 96 96"
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
                 fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
+                  d="M43.8 61.8L64.95 40.65L60.75 36.45L43.8 53.4L35.25 44.85L31.05 49.05L43.8 61.8ZM48 78C43.85 78 39.95 77.212 36.3 75.636C32.65 74.062 29.475 71.925 26.775 69.225C24.075 66.525 21.938 63.35 20.364 59.7C18.788 56.05 18 52.15 18 48C18 43.85 18.788 39.95 20.364 36.3C21.938 32.65 24.075 29.475 26.775 26.775C29.475 24.075 32.65 21.937 36.3 20.361C39.95 18.787 43.85 18 48 18C52.15 18 56.05 18.787 59.7 20.361C63.35 21.937 66.525 24.075 69.225 26.775C71.925 29.475 74.062 32.65 75.636 36.3C77.212 39.95 78 43.85 78 48C78 52.15 77.212 56.05 75.636 59.7C74.062 63.35 71.925 66.525 69.225 69.225C66.525 71.925 63.35 74.062 59.7 75.636C56.05 77.212 52.15 78 48 78Z"
+                  fill="rgb(0,205,79)"
                 />
               </svg>
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900">
+            <h2
+              className="text-[24px] font-semibold leading-[36px] text-[#2A2A2A]"
+              style={{ fontFamily: "Lato, sans-serif" }}
+            >
               {postToEdit ? "Updated Successfully!" : "Added Successfully!"}
-            </h3>
-            <p className="text-gray-600">
+            </h2>
+            <p
+              className="text-[14px] text-[#6A7282] leading-[20px] tracking-[-0.15px]"
+              style={{ fontFamily: "Inter, sans-serif" }}
+            >
               {postToEdit
                 ? "Your news updated successfully"
                 : "Your news added successfully"}
             </p>
+
             <button
               onClick={() => setShowSuccess(false)}
-              className="w-full h-11 rounded-lg bg-[#243C7B] text-white font-medium hover:bg-[#1a2d5c] transition-colors"
+              className="mt-6 w-[100%] h-[49px] rounded-lg bg-[#243C7B] text-white 
+        text-[16px] font-medium hover:bg-[#1F3265] transition-all shadow-[0_1px_2px_rgba(105,81,255,0.05)]"
             >
               Ok
             </button>

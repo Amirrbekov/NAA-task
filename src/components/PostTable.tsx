@@ -127,7 +127,7 @@ export default function PostsTable({
                   </span>
                 </div>
               </td>
-              <td className="p-3.5 text-center">
+              <td className="p-3.5 text-center relative">
                 <div className="flex justify-center items-center relative">
                   <button
                     onClick={() =>
@@ -135,23 +135,42 @@ export default function PostsTable({
                     }
                     className="flex items-center justify-between px-3 py-2 border border-[#E5E7EB] rounded-[10px] bg-white min-w-[146px] hover:bg-gray-50 transition-colors"
                   >
-                    <span className="text-[#374151] font-inter text-sm">
+                    <span className="text-[#374151] font-inter flex items-center gap-1.5 text-sm">
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          post.publishStatus === "Publish"
+                            ? "bg-green-500"
+                            : "bg-[#F57C11]"
+                        }`}
+                      ></span>
                       {post.publishStatus}
                     </span>
                     <FiChevronDown
-                      className={`w-4 h-4 text-gray-400 transition-transform ${
+                      className={`w-4 h-4 transition-transform ${
                         dropdownOpen === post.id ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
                   {dropdownOpen === post.id && (
-                    <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 w-[146px] bg-white border border-[#F7F7F7] rounded-xl shadow-[0_0_10.9px_rgba(235,235,235,0.25)] z-20 py-3 px-3 flex flex-col gap-4">
-                      <button className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors">
+                    <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 w-[146px] bg-white border border-[#F7F7F7] rounded-xl shadow-[0_0_10.9px_rgba(235,235,235,0.25)] z-50 py-3 px-3 flex flex-col gap-3">
+                      <button
+                        onClick={() => {
+                          post.publishStatus = "Publish";
+                          setDropdownOpen(null);
+                        }}
+                        className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors"
+                      >
                         <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
                         <span className="text-green-500">Publish</span>
                       </button>
-                      <button className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors">
+                      <button
+                        onClick={() => {
+                          post.publishStatus = "Draft";
+                          setDropdownOpen(null);
+                        }}
+                        className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors"
+                      >
                         <span className="w-1.5 h-1.5 bg-[#F57C11] rounded-full"></span>
                         <span className="text-[#F57C11]">Draft</span>
                       </button>
