@@ -13,13 +13,13 @@ export default function Sidebar() {
   const handleMenuClick = (menu: string) => setActiveMenu(menu);
 
   return (
-    <aside className="w-[318px] h-screen flex flex-col justify-between bg-white shadow-md border-r border-gray-100 p-6">
+    <aside className="w-full lg:w-[318px] h-auto lg:h-screen flex flex-col justify-between bg-white shadow-md border-r border-gray-100 p-4 lg:p-6">
       <div>
-        <div className="mt-6 mb-6">
+        <div className="mt-2 lg:mt-6 mb-4 lg:mb-6">
           <Logo />
         </div>
 
-        <hr className="border-gray-200 mb-8" />
+        <hr className="border-gray-200 mb-6 lg:mb-8" />
 
         <div className="flex flex-col gap-3">
           <SidebarItem
@@ -57,19 +57,20 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="border border-gray-100 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.05)] bg-white p-5 mt-8">
-        <SidebarItem title="Settings" icon={<IoSettingsOutline />} />
-        <div className="flex items-center gap-3 mt-6">
+      <div className="mt-6 lg:mt-8 space-y-3">
+        <div className="border border-gray-100 rounded-xl">
+          <SidebarItem title="Settings" icon={<IoSettingsOutline />} />
+        </div>
+
+        <div className="flex items-center gap-2 p-5 border border-[#F7F7F7] rounded-xl shadow-[0_0_10.9px_rgba(235,235,235,0.25)] bg-[#243C7B]">
           <img
             src="./user.png"
             alt="User Photo"
             className="w-10 h-10 rounded-full"
           />
-          <div>
-            <h1 className="text-sm font-semibold text-gray-800">
-              Khayal Ahmedli
-            </h1>
-            <p className="text-xs text-gray-500">khahmadli</p>
+          <div className="flex flex-col gap-[5px]">
+            <h1 className="text-sm font-semibold text-white">Khayal Ahmadli</h1>
+            <p className="text-xs text-white/80">khahmadli</p>
           </div>
         </div>
       </div>

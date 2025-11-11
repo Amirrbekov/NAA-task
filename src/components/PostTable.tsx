@@ -1,48 +1,63 @@
 import { FiChevronDown, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Post } from "../api/mock";
+import { useState } from "react";
 
 type Props = {
   posts: Post[];
+  handleClick: (post: Post) => void;
+  onClickDelete: (val: string) => void;
 };
 
-export default function PostsTable({ posts }: Props) {
+const stripHtmlTags = (html: string): string => {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+};
+
+export default function PostsTable({
+  posts,
+  handleClick,
+  onClickDelete,
+}: Props) {
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <table className="w-full border-collapse">
-        <thead className="text-blue-900 font-semibold">
+    <div className="bg-white rounded-xl border border-gray-100 overflow-x-auto">
+      <table className="w-full border-collapse min-w-[700px] sm:min-w-[900px]">
+        <thead>
           <tr>
             <th className="text-left p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Post
               </span>
             </th>
             <th className="text-center p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Type
               </span>
             </th>
             <th className="text-center p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Sharing time
               </span>
             </th>
             <th className="text-center p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Status
               </span>
             </th>
             <th className="text-center p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Publish Status
               </span>
             </th>
             <th className="text-center p-3 border-r border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Author
               </span>
             </th>
             <th className="text-center p-3 border-b border-[#F5F5F5]">
-              <span className="text-[#243C7B] font-lato text-sm leading-6">
+              <span className="text-[#243C7B] font-lato text-sm leading-6 font-semibold">
                 Actions
               </span>
             </th>
@@ -50,8 +65,11 @@ export default function PostsTable({ posts }: Props) {
         </thead>
         <tbody>
           {posts.map((post: Post) => (
-            <tr key={post.id} className="hover:bg-gray-50 transition-colors">
-              <td className="p-[14px] align-top">
+            <tr
+              key={post.id}
+              className="border-t border-gray-100 hover:bg-gray-50/50 transition-colors"
+            >
+              <td className="p-3.5 align-top">
                 <div className="flex items-start gap-3">
                   <img
                     src={post.image}
@@ -63,12 +81,12 @@ export default function PostsTable({ posts }: Props) {
                       {post.title.substring(0, 20) + "..."}
                     </h3>
                     <p className="text-[#6A7282] font-inter text-sm font-normal leading-5 tracking-[-0.15px]">
-                      {post.description.substring(0, 55) + "..."}
+                      {stripHtmlTags(post.htmlContent).substring(0, 57) + "..."}
                     </p>
                   </div>
                 </div>
               </td>
-              <td className="p-[14px] text-center">
+              <td className="p-3.5 text-center">
                 <div className="flex justify-center items-center">
                   <span
                     className={`inline-flex px-3 py-1 rounded-md text-xs font-medium ${
@@ -81,7 +99,7 @@ export default function PostsTable({ posts }: Props) {
                   </span>
                 </div>
               </td>
-              <td className="p-[14px] align-top">
+              <td className="p-3.5">
                 <div className="flex flex-col justify-center items-center gap-1">
                   <span className="text-[#222222] font-lato text-base font-medium leading-6">
                     {post.sharingTime.split("\n")[0]}
@@ -91,33 +109,73 @@ export default function PostsTable({ posts }: Props) {
                   </span>
                 </div>
               </td>
-              <td className="p-[14px] text-center">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                  {post.status}
-                </span>
-              </td>
-              <td className="p-[14px] text-center">
+              <td className="p-3.5 text-center">
                 <div className="flex justify-center items-center">
-                  <div className="flex items-center justify-between px-3 py-2 border border-[#E5E7EB] rounded-[10px] bg-white min-w-[146px]">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium ${
+                      post.status === "Active"
+                        ? "bg-green-50 text-green-700"
+                        : "bg-red-50 text-red-700"
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        post.status === "Active" ? "bg-green-500" : "bg-red-500"
+                      }`}
+                    ></span>
+                    {post.status}
+                  </span>
+                </div>
+              </td>
+              <td className="p-3.5 text-center">
+                <div className="flex justify-center items-center relative">
+                  <button
+                    onClick={() =>
+                      setDropdownOpen(dropdownOpen === post.id ? null : post.id)
+                    }
+                    className="flex items-center justify-between px-3 py-2 border border-[#E5E7EB] rounded-[10px] bg-white min-w-[146px] hover:bg-gray-50 transition-colors"
+                  >
                     <span className="text-[#374151] font-inter text-sm">
                       {post.publishStatus}
                     </span>
-                    <FiChevronDown className="w-4 h-4 text-gray-400" />
-                  </div>
+                    <FiChevronDown
+                      className={`w-4 h-4 text-gray-400 transition-transform ${
+                        dropdownOpen === post.id ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {dropdownOpen === post.id && (
+                    <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 w-[146px] bg-white border border-[#F7F7F7] rounded-xl shadow-[0_0_10.9px_rgba(235,235,235,0.25)] z-20 py-3 px-3 flex flex-col gap-4">
+                      <button className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors">
+                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                        <span className="text-green-500">Publish</span>
+                      </button>
+                      <button className="flex items-center gap-1 text-left text-sm text-gray-700 hover:text-[#243C7B] transition-colors">
+                        <span className="w-1.5 h-1.5 bg-[#F57C11] rounded-full"></span>
+                        <span className="text-[#F57C11]">Draft</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </td>
-              <td className="p-[14px] text-center">
+              <td className="p-3.5 text-center">
                 <span className="text-[#0A0A0A] font-inter text-base font-normal leading-6">
                   {post.author}
                 </span>
               </td>
-              <td className="p-[14px]">
+              <td className="p-3.5">
                 <div className="flex items-center justify-center gap-3">
-                  <button className="text-gray-400 hover:text-blue-600 transition-colors">
+                  <button
+                    onClick={() => handleClick(post)}
+                    className="text-gray-400 hover:text-blue-600 transition-colors"
+                  >
                     <FiEdit2 className="w-4 h-4" />
                   </button>
-                  <button className="text-gray-400 hover:text-red-600 transition-colors">
+                  <button
+                    onClick={() => onClickDelete(post.id)}
+                    className="text-gray-400 hover:text-red-600 transition-colors"
+                  >
                     <FiTrash2 className="w-4 h-4" />
                   </button>
                 </div>

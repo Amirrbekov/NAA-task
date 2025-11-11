@@ -5,6 +5,7 @@ interface Props {
   options: readonly string[];
   active: boolean;
   onToggle: () => void;
+  onSelect: (value: string) => void;
 }
 
 export default function FilterDropdown({
@@ -12,12 +13,13 @@ export default function FilterDropdown({
   options,
   active,
   onToggle,
+  onSelect,
 }: Props) {
   return (
     <div className="relative">
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-36 px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-gray-700 hover:bg-gray-50"
+        className="flex items-center justify-between w-full sm:w-36 px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-gray-700 hover:bg-gray-50"
       >
         {label}
         <FiChevronDown
@@ -31,6 +33,7 @@ export default function FilterDropdown({
           {options.map((opt: string) => (
             <button
               key={opt}
+              onClick={() => onSelect(opt)}
               className="block w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-xl last:rounded-b-xl"
             >
               {opt}

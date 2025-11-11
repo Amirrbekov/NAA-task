@@ -29,41 +29,41 @@ export default function Pagination({
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-6">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-40"
-      >
-        <FiChevronLeft className="text-gray-600 text-lg" />
-      </button>
-      {visiblePages.map((page) => (
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+      <div className="flex items-center gap-2">
         <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={`w-10 h-10 rounded-full text-sm font-medium flex items-center justify-center transition-colors
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-40 transition-colors"
+        >
+          <FiChevronLeft className="text-gray-600 text-lg" />
+        </button>
+
+        {visiblePages.map((page) => (
+          <button
+            key={page}
+            onClick={() => onPageChange(page)}
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-medium flex items-center justify-center transition-colors
             ${
               currentPage === page
                 ? "bg-[#243C7B] text-white shadow-sm"
                 : "text-gray-700 hover:bg-gray-100"
             }`}
-        >
-          {page}
-        </button>
-      ))}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-40"
-      >
-        <FiChevronRight className="text-gray-600 text-lg" />
-      </button>
+          >
+            {page}
+          </button>
+        ))}
 
-      {/* <div className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full bg-[#FFFDF9] text-sm font-medium text-gray-800 cursor-pointer transition">
-        <span>Rows: 10</span>
-        <FiChevronRight className="text-gray-600 rotate-90" />
-      </div> */}
-      <div className="relative ml-3">
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 disabled:opacity-40 transition-colors"
+        >
+          <FiChevronRight className="text-gray-600 text-lg" />
+        </button>
+      </div>
+
+      <div className="relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full bg-[#FFFDF9] text-sm font-medium text-gray-800 cursor-pointer hover:bg-gray-50 transition"
@@ -78,9 +78,9 @@ export default function Pagination({
 
         {dropdownOpen && (
           <div
-            className="absolute bottom-12 left-0 w-32 bg-white border border-gray-200 rounded-xl shadow-lg overflow-y-auto z-10"
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-200 rounded-xl shadow-lg overflow-y-auto z-10"
             style={{
-              maxHeight: "120px", // shows 3 items (~40px each)
+              maxHeight: "120px",
             }}
           >
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
